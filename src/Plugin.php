@@ -51,6 +51,19 @@ class Plugin
 		} else {
 			$success = reset($success);
 		}
+        
+        $offline = get_posts(array('name' => 'axima_offline'));
+		if (!count($offline)) {
+			$offline = wp_insert_post(array(
+				'post_type' => 'page',
+				'post_name' => 'axima_offline',
+				'post_title' => 'Payment initiated',
+				'post_content' => 'Your payment was initiated',
+				'post_status' => 'publish',
+			));
+		} else {
+			$offline = reset($offline);
+		}
 
 		$error = get_posts(array('name' => 'axima_error'));
 		if (!count($error)) {
@@ -66,6 +79,7 @@ class Plugin
 		}
 		$this->updateOptions([
 			'success-url' => get_permalink($success),
+            'offline-url' => get_permalink($offline),
 			'error-url' => get_permalink($error),
 		]);
 
@@ -216,6 +230,7 @@ class Plugin
 				'merchantId' => trim($this->getPost('merchant-id')),
 				'shopId' => trim($this->getPost('shop-id')),
 				'success-url' => trim($this->getPost('success-url')),
+                'offline-url' => trim($this->getPost('offline-url')),
 				'error-url' => trim($this->getPost('error-url')),
 			);
 			if ($password) {
@@ -299,10 +314,15 @@ class Plugin
 
 		$status = $get('PaymentOrderStatusID', 2);
 		$note = $get('PaymentOrderStatusDescription', '');
+        $transaction_id = $get('PaymentOrderID','');
 
 		if ($status == 3) { // intentionally ==
 			$status = self::STATUS_PAID;
-			$order->payment_complete();
+			$order->payment_complete($transaction_id);
+		} elseif ($status == 1) {
+			$status = self::STATUS_INITIATED;
+			add_filter( 'woocommerce_order_item_needs_processing', '__return_true' );
+			$order->payment_complete($transaction_id);
 		} else {
 			$status = self::STATUS_ERROR;
 			$order->update_status('failed', $note);

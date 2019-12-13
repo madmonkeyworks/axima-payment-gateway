@@ -48,6 +48,20 @@
 				<p class="help-block"><?= __('Copy this URL to your settings in pays.cz administration to success payment URL field.', 'axima-payment-gateway') ?></p>
 			</div>
 		</div>
+        <div class="form-group">
+			<label class="col-sm-2 control-label"><?= __('Offline payment page', 'axima-payment-gateway') ?></label>
+			<div class="col-sm-5">
+				<select name="offline-url" data-change="#offline-url" class="form-control">
+					<?php foreach ($pages as $url => $page): ?>
+						<option value="<?= $url ?>"<?php if (isset($settings['offline-url']) && $url === $settings['offline-url']): ?> selected<?php endif; ?>><?= $page ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+			<div class="col-sm-5">
+				<input type="text" id="offline-url" name="offline-url-preview" class="form-control" readonly value="<?= isset($settings['offline-url']) ? $settings['offline-url'] : '' ?>">
+				<p class="help-block"><?= __('Copy this URL to your settings in pays.cz administration to offline payment URL field.', 'axima-payment-gateway') ?></p>
+			</div>
+		</div>
 		<div class="form-group">
 			<label class="col-sm-2 control-label"><?= __('Failed payment page', 'axima-payment-gateway') ?></label>
 			<div class="col-sm-5">

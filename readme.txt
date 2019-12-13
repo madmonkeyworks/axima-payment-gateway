@@ -1,5 +1,5 @@
 === pays.cz – Payment gateway WooCommerce plugin ===
-Contributors: greenyaptec
+Contributors: greenyaptec, madmonkeyworks
 Donate link:
 Tags: payment, gate, mobile, sms, eet
 Requires at least: 4.5
@@ -30,6 +30,9 @@ Wordpress 4.5 or higher, PHP at least 5.4, WooCommerce plugin installed.
 3. Plugin settings and urls for integration into sms.sluzba.cz.
 
 == Changelog ==
+
+= 2.1 =
+* Support for offline payments (initiated payments, e.g. bank transfer)
 
 = 2.0 =
 * Czech translation
